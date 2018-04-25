@@ -448,7 +448,6 @@ public class OttoMachine extends JFrame{
 					JOptionPane.showMessageDialog(null, "New customer and account created", "Info", JOptionPane.INFORMATION_MESSAGE);
 					tabbedPane.setSelectedIndex(0);
 					tabbedPane.setEnabledAt(5, false);	
-					System.out.println(customers.get(2).getFName());
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(null, "Error, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -499,7 +498,6 @@ public class OttoMachine extends JFrame{
 					accInUse = accounts.get(accIndx);
 				}
 			}
-			System.out.println(accounts.indexOf(loggedIn));	
 			int pin = Integer.parseInt(pinField.getText());
 			if (loggedIn.comparePin(pin) == true) {
 				return true;
