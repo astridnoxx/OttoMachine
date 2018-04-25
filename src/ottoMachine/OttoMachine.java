@@ -28,6 +28,7 @@ public class OttoMachine extends JFrame{
 	Customer loggedIn;
 	Account accInUse;
 	
+	
 	private JTextField cusIDField;
 	private JPasswordField pinField;
 	private JTextField fnameFld;
@@ -87,24 +88,12 @@ public class OttoMachine extends JFrame{
 		JButton btnLogIn = new JButton("Log in");
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Performs log in. Searches customers list for given customer number, if found, makes comparison of given pin to customer pin.
-				//Sets the current user and account to logged in and enables and switches to account tab.
-				//Login failures and exceptions notified with pop up dialog
-				try {
-					int customerID = Integer.parseInt(cusIDField.getText());
-					int indx = customers.indexOf(customerID);
-					loggedIn = customers.get(indx+1);
-					int accIndx = accounts.indexOf(loggedIn);
-					accInUse = accounts.get(accIndx+1);
-					int pin = Integer.parseInt(pinField.getText());
-					if (loggedIn.comparePin(pin) == true) {
-						tabbedPane.setEnabledAt(1, true);
-						tabbedPane.setSelectedIndex(1);
-						tabbedPane.setEnabledAt(0, false);
-					} else JOptionPane.showMessageDialog(null, "Incorrect details, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
-				} catch (Exception exception) {
-					JOptionPane.showMessageDialog(null, "Login failed, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
-				}
+				//Calls login method, if successful switches to account tab
+				if (logIn() == true) {
+					tabbedPane.setEnabledAt(1, true);
+					tabbedPane.setSelectedIndex(1);
+					tabbedPane.setEnabledAt(0, false);
+				}	
 			}
 		});
 		btnLogIn.setBounds(93, 70, 89, 23);
@@ -459,7 +448,7 @@ public class OttoMachine extends JFrame{
 					JOptionPane.showMessageDialog(null, "New customer and account created", "Info", JOptionPane.INFORMATION_MESSAGE);
 					tabbedPane.setSelectedIndex(0);
 					tabbedPane.setEnabledAt(5, false);	
-					System.out.println(create.toString());
+					System.out.println(customers.get(2).getFName());
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(null, "Error, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -492,13 +481,48 @@ public class OttoMachine extends JFrame{
 		adminPanel.add(btnDelete);
 				
 	}
+	
+	//Performs log in. Searches customers list for given customer number, if found, makes comparison of given pin to customer pin.
+	//Sets the current user and account to logged in and enables and switches to account tab.
+	//Login failures and exceptions notified with pop up dialog
+	public boolean logIn() {
+		try {
+			int customerID = Integer.parseInt(cusIDField.getText());
+			for (int i = 0; i < customers.size(); ++i) {
+				int compare = customers.get(i).getID();
+				if (compare == customerID) {
+					Customer cus = customers.get(i);
+					Account acc = accounts.get(i);
+					int indx = customers.indexOf(cus);
+					int accIndx = accounts.indexOf(acc);
+					loggedIn = customers.get(indx);
+					accInUse = accounts.get(accIndx);
+				}
+			}
+			System.out.println(accounts.indexOf(loggedIn));
+			
+			
+			
+			int pin = Integer.parseInt(pinField.getText());
+			if (loggedIn.comparePin(pin) == true) {
+				return true;
+			} else {
+				JOptionPane.showMessageDialog(null, "Incorrect details, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
+				return false;
+			}
+		} catch (Exception exception) {
+			JOptionPane.showMessageDialog(null, "Login failed, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
+			exception.printStackTrace();
+			return false;
+		} 
+	}
 			
 	public static void main(String args[]) {
 		// example accounts and customers
 		Customer testCOne = new Customer(1234, "Darth", "Vader", 1234);
 		customers.add(testCOne);
 		Customer testCTwo = new Customer(5678, "Luke", "Skywalker", 5678);
-		customers.add(testCOne);		
+		customers.add(testCTwo);		
 		Account testAOne = new Account(4321, testCOne, 1000);
 		accounts.add(testAOne);
 		Account testATwo = new Account(8765, testCTwo, 500);
