@@ -499,10 +499,7 @@ public class OttoMachine extends JFrame{
 					accInUse = accounts.get(accIndx);
 				}
 			}
-			System.out.println(accounts.indexOf(loggedIn));
-			
-			
-			
+			System.out.println(accounts.indexOf(loggedIn));	
 			int pin = Integer.parseInt(pinField.getText());
 			if (loggedIn.comparePin(pin) == true) {
 				return true;
