@@ -193,6 +193,25 @@ public class OttoMachine extends JFrame{
 		btnRecentTransactions.setBounds(234, 60, 157, 32);
 		accPan.add(btnRecentTransactions);
 		
+		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					loggedIn = null;
+					accInUse = null;
+					cusIDField.setText("");
+					pinField.setText("");
+					tabbedPane.setEnabledAt(0, true);
+					tabbedPane.setSelectedIndex(0);
+					tabbedPane.setEnabledAt(1, false);
+					JOptionPane.showMessageDialog(null, "Successfully logged out", "Info", JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception exception) {
+					JOptionPane.showMessageDialog(null, "Error, couldn't log out", "Info", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}});
+		btnLogOut.setBounds(388, 7, 89, 23);
+		accPan.add(btnLogOut);
+		
 		//GUI withdraw tab items
 		JPanel withdrawPan = new JPanel();
 		tabbedPane.addTab("Withdraw", null, withdrawPan, null);
@@ -464,21 +483,27 @@ public class OttoMachine extends JFrame{
 				////Displays success or exception dialogs
 				try {
 					int customerID = Integer.parseInt(delCusNumFld.getText());
-					int indx = customers.indexOf(customerID);	
-					customers.remove(indx+1);
-					int accIndx = accounts.indexOf(indx+1);
-					accounts.remove(accIndx+1);
-					JOptionPane.showMessageDialog(null, "Customer and account removed", "Info", JOptionPane.INFORMATION_MESSAGE);
-					tabbedPane.setSelectedIndex(0);
-					tabbedPane.setEnabledAt(5, false);
+					for (int i = 0; i < customers.size(); ++i) {
+						int compare = customers.get(i).getID();
+						if (compare == customerID) {
+							Customer cus = customers.get(i);
+							Account acc = accounts.get(i);
+							int indx = customers.indexOf(cus);
+							int accIndx = accounts.indexOf(acc);
+							customers.remove(indx);
+							accounts.remove(accIndx);
+							JOptionPane.showMessageDialog(null, "Customer and account removed", "Info", JOptionPane.INFORMATION_MESSAGE);
+							tabbedPane.setSelectedIndex(0);
+							tabbedPane.setEnabledAt(5, false);
+						}
+					}	
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(null, "Error, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
 		btnDelete.setBounds(10, 224, 89, 23);
-		adminPanel.add(btnDelete);
-				
+		adminPanel.add(btnDelete);			
 	}
 	
 	//Performs log in. Searches customers list for given customer number, if found, makes comparison of given pin to customer pin.
@@ -507,7 +532,6 @@ public class OttoMachine extends JFrame{
 			}
 		} catch (Exception exception) {
 			JOptionPane.showMessageDialog(null, "Login failed, try again.", "Info", JOptionPane.INFORMATION_MESSAGE);
-			exception.printStackTrace();
 			return false;
 		} 
 	}
