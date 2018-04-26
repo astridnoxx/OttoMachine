@@ -193,6 +193,7 @@ public class OttoMachine extends JFrame{
 		btnRecentTransactions.setBounds(234, 60, 157, 32);
 		accPan.add(btnRecentTransactions);
 		
+		//Logs out, clears current customer and log in fields
 		JButton btnLogOut = new JButton("Log out");
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
